@@ -1,0 +1,37 @@
+一、c文件中调用c++文件中的函数
+1. c++头文件b_cpp.h中 将需要被调用函数的声明放入extern "C"{}语句块中：
+    注：b_cpp.h中不能包含标准头文件
+如：b_cpp.h代码为
+#ifndef B_CPP_H
+#define B_CPP_  H
+    #ifdef __cplusplus
+    extern "C" {
+    #endif
+        int bTest(int x);
+    #ifdef __cplusplus
+    }
+    #endif
+#endif
+2. c文件a_c.c中包含c++头文件b_cpp.h
+(1和2两步有另外一种情况：b_cpp.h中包含了c++的标准头文件，则a_c.c中只能加extern声明cpp函数)
+3. 编译:
+    gcc -c a_c.c -o a.o
+    g++ -c b.cpp -o b.o -lstdc++
+    gcc a.o b.o -o main -lstdc++
+4. 运行：
+    运行./main.exe
+
+二、cpp文件中调用c文件中的函数
+1. 如果在 C++ 编译环境中，想引用纯C的头文件，这些C头文件并没有 extern "C" 修饰。
+    非侵入式的做法是，在 extern "C" 中去包含C头文件。
+(1.1 or 如果C文件被extern "C"修饰，则c++文件中用extern "C" 包含C函数声明；)
+
+2. 编译：
+    g++ b.cpp a.c -o main
+    
+    // 如果上面出错，则用下面
+    gcc -c a.c -o a.o
+    g++ -c b.cpp -o b.o
+    g++ a.o b.o -o main
+3. 运行
+    ./main.exe
